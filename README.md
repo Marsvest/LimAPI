@@ -1,3 +1,4 @@
+![logo](https://github.com/user-attachments/assets/136cf449-f3d3-4214-82fe-0cb8a56b0d8b)
 # Легковесный веб-фреймворк для создания API
 
 ## Основые особенности
