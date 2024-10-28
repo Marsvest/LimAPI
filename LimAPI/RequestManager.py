@@ -1,6 +1,7 @@
 import json
-from Types import Request, Header
-from utils import clean_array
+
+from LimAPI.Types import Request, Header
+from LimAPI.utils import clean_array
 
 
 class RequestManager:
@@ -17,14 +18,15 @@ class RequestManager:
 
         # Обработка хедеров
         headers: list[Header] = []
-        body: str = ""
+        body: list[str] = [""]
 
         for raw_header in raw_headers:
             if "HTTP" in raw_header:
                 method, endpoint = raw_header.split(" /")
+                endpoint, _ = endpoint.split(' ')
                 continue
             elif raw_header == "{":
-                body = raw_headers[raw_headers.index(raw_header) :]
+                body = raw_headers[raw_headers.index(raw_header):]
                 break
             else:
                 name, value = raw_header.split(": ", 1)
@@ -45,9 +47,11 @@ class RequestManager:
 
         return request
 
-    async def process(self, request: Request | str) -> None:
+    async def process(self, request: Request | str) -> Request:
         if type(request) is str:
             request = await self.parse(request)
+
+        return request
 
 
 request_manager = RequestManager()

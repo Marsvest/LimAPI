@@ -1,7 +1,7 @@
-import socket
 import asyncio
+from asyncio import StreamReader, StreamWriter
 
-from RequestManager import request_manager
+from LimAPI.RequestManager import request_manager
 
 
 class Server:
@@ -12,32 +12,28 @@ class Server:
             host (str): Хост сервера. Defaults to "127.0.0.1".
             port (int): Порт сервера. Defaults to 8080.
         """
-        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_socket.bind((host, port))
-        self.server_socket.listen(1)
-        print(f"Сервер запущен на {host}:{port}")
+        self.host = host
+        self.port = port
+
+    async def handle_request(self, reader: StreamReader, writer: StreamWriter) -> None:
+        raw_request = await reader.read(1024)
+        request = await request_manager.process(raw_request.decode())
+
+        # Заглушка
+        response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello, World!"
+
+        # Отправка ответа
+        writer.write(response.encode())
+        await writer.drain()
+        writer.close()
 
     async def start_polling(self) -> None:
         """Асинхронный старт сервера"""
-        while True:
-            client_socket, addr = self.server_socket.accept()
-            request = client_socket.recv(1024).decode()
+        server = await asyncio.start_server(self.handle_request, self.host, self.port)
+        print(f"Сервер запущен на {self.host}:{self.port}")
 
-            await request_manager.process(request)
-
-            # Заглушка
-            response = (
-                "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello, World!"
-            )
-
-            # TODO: Добавить обработку ответа Response
-            client_socket.sendall(response.encode())
-            client_socket.close()
+        async with server:
+            await server.serve_forever()
 
     def run(self) -> None:
         asyncio.run(self.start_polling())
-
-
-if __name__ == "__main__":
-    server = Server()
-    server.run()
