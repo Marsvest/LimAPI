@@ -1,15 +1,17 @@
-from LimAPI import Server, Endpoint
+from LimAPI import Server, Router
+
 
 server = Server()
 
 
-@Endpoint.create("/")
+@Router.create("/")
 async def main():
     return "Hello, world!"
 
 
-@Endpoint.create("/test")
+@Router.create("/test")
 async def test():
+    print('Выполнение полезной нагрузки...')
     return "Test Success!"
 
 

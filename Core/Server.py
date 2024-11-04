@@ -3,6 +3,7 @@ from asyncio import StreamReader, StreamWriter
 
 from Core.RequestManager import RequestManager
 from Core.EndpointManager import EndpointManager
+from Core.ResponseManager import ResponseManager
 
 
 class Server:
@@ -23,6 +24,10 @@ class Server:
         request = await RequestManager.process(raw_request.decode())
 
         # Роутинг запроса
+        endpoint_data = await EndpointManager.process(request)
+
+        # Обработка ответа
+        # response = await ResponseManager.process(endpoint_data)
 
         # Заглушка
         response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello, World!"

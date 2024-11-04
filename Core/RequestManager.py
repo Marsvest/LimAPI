@@ -38,7 +38,7 @@ class RequestManager:
         # Создание запроса
         request = Request(
             method=method,
-            endpoint=endpoint,
+            endpoint="/" + endpoint,
             cookie=next(
                 (header.value for header in headers if header.name == "Cookie"), None
             ),
