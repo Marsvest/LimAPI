@@ -5,6 +5,7 @@ from Core.utils import clean_array
 
 
 class RequestManager:
+    @classmethod
     async def parse(self, raw_request: str) -> Request:
         """Создание типизированного объекта запроса
 
@@ -23,10 +24,10 @@ class RequestManager:
         for raw_header in raw_headers:
             if "HTTP" in raw_header:
                 method, endpoint = raw_header.split(" /")
-                endpoint, _ = endpoint.split(' ')
+                endpoint, _ = endpoint.split(" ")
                 continue
             elif raw_header == "{":
-                body = raw_headers[raw_headers.index(raw_header):]
+                body = raw_headers[raw_headers.index(raw_header) :]
                 break
             else:
                 name, value = raw_header.split(": ", 1)
@@ -47,11 +48,9 @@ class RequestManager:
 
         return request
 
+    @classmethod
     async def process(self, request: Request | str) -> Request:
         if type(request) is str:
             request = await self.parse(request)
 
         return request
-
-
-request_manager = RequestManager()

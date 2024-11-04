@@ -1,7 +1,8 @@
 import asyncio
 from asyncio import StreamReader, StreamWriter
 
-from Core.RequestManager import request_manager
+from Core.RequestManager import RequestManager
+from Core.EndpointManager import EndpointManager
 
 
 class Server:
@@ -17,7 +18,11 @@ class Server:
 
     async def handle_request(self, reader: StreamReader, writer: StreamWriter) -> None:
         raw_request = await reader.read(1024)
-        request = await request_manager.process(raw_request.decode())
+
+        # Обработка запроса
+        request = await RequestManager.process(raw_request.decode())
+
+        # Роутинг запроса
 
         # Заглушка
         response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello, World!"
