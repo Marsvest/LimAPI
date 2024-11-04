@@ -1,6 +1,7 @@
 from typing import Callable, Dict, Any
 
 from Core.Types import Request
+from Core.utils import has_request
 
 
 class EndpointManager:
@@ -20,7 +21,10 @@ class EndpointManager:
         bound_function: Callable = self.endpoints.get(route)
 
         if bound_function:
-            response_data: Any = await bound_function()
+            if has_request(bound_function):
+                response_data: Any = await bound_function(request)
+            else:
+                response_data: Any = await bound_function()
         else:
             return None
 

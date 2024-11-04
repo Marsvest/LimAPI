@@ -1,9 +1,11 @@
 import asyncio
 from asyncio import StreamReader, StreamWriter
+from typing import Any
 
 from Core.RequestManager import RequestManager
 from Core.EndpointManager import EndpointManager
 from Core.ResponseManager import ResponseManager
+from Core.Types import Request
 
 
 class Server:
@@ -18,16 +20,17 @@ class Server:
         self.port = port
 
     async def handle_request(self, reader: StreamReader, writer: StreamWriter) -> None:
-        raw_request = await reader.read(1024)
+        # Получение "сырого" запроса
+        raw_request: bytearray = await reader.read(1024)
 
         # Обработка запроса
-        request = await RequestManager.process(raw_request.decode())
+        request: Request = await RequestManager.process(raw_request.decode())
 
         # Роутинг запроса
-        endpoint_data = await EndpointManager.process(request)
+        endpoint_data: Any = await EndpointManager.process(request)
 
         # Обработка ответа
-        # response = await ResponseManager.process(endpoint_data)
+        response: str = await ResponseManager.process(endpoint_data)
 
         # Заглушка
         response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello, World!"
@@ -46,4 +49,5 @@ class Server:
             await server.serve_forever()
 
     def run(self) -> None:
+        # TODO: Добавить try except Exception as e: print(e)
         asyncio.run(self.start_polling())
