@@ -1,13 +1,14 @@
-from pydantic import BaseModel
-# from dataclasses import dataclass
+from dataclasses import dataclass
 
 
-class Header(BaseModel):
+@dataclass
+class Header:
     name: str
     value: str
 
 
-class Request(BaseModel):
+@dataclass
+class Request:
     method: str
     endpoint: str
     cookie: str | None
