@@ -1,5 +1,16 @@
-from LimAPI.Server import Server
+from LimAPI import Server, Endpoint
 
-if __name__ == "__main__":
-    server = Server()
-    server.run()
+server = Server()
+
+
+@Endpoint.create("/")
+async def main():
+    return "Hello, world!"
+
+
+@Endpoint.create("/test")
+async def test():
+    return "Test Success!"
+
+
+server.run()

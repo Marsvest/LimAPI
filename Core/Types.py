@@ -14,3 +14,9 @@ class Request:
     cookie: str | None
     payload: str | None
     headers: list[Header]
+
+
+@dataclass
+class Response:
+    payload: str | None
+    headers: list[Header]

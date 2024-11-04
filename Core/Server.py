@@ -1,7 +1,7 @@
 import asyncio
 from asyncio import StreamReader, StreamWriter
 
-from LimAPI.RequestManager import request_manager
+from Core.RequestManager import request_manager
 
 
 class Server:

@@ -1,7 +1,7 @@
 import json
 
-from LimAPI.Types import Request, Header
-from LimAPI.utils import clean_array
+from Core.Types import Request, Header
+from Core.utils import clean_array
 
 
 class RequestManager:
