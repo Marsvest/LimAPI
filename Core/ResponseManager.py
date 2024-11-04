@@ -12,15 +12,15 @@ class ResponseManager:
             response: Response = await self.create_from_empty(data)
 
         cooked_response: str = await self.stringify(response)
-        
+
         return cooked_response
 
     @classmethod
-    async def create_from_empty(self, data: Any) -> Response:
+    async def add_require_fields(self, response: Response) -> Response:
         pass
 
     @classmethod
-    async def add_require_fields(self, response: Response) -> Response:
+    async def create_from_empty(self, data: Any) -> Response:
         pass
 
     @classmethod

@@ -1,5 +1,6 @@
 # import asyncio
-from LimAPI import Server, Router, Request
+from LimAPI.Core import Server, Router
+from LimAPI.Types import Request
 
 
 server = Server()
