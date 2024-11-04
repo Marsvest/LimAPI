@@ -8,16 +8,25 @@
 
 ## Quickstart
 ```
-from LimAPI import Server
+from LimAPI.Core import Server, Router
+from LimAPI.Types import Request
 
 
-app = Server()
+server = Server()
 
 
-@app.get("/")
+@Router.create("/")
 async def main():
-   return "Hello world!"
+    return "Hello, world!"
 
 
-app.run()
+@Router.create("/test")
+async def test(request: Request):
+    print(request.headers)
+    print('Выполнение полезной нагрузки...')
+    return "Test Success!"
+
+
+server.run()
+
 ```
