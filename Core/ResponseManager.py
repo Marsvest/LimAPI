@@ -19,7 +19,7 @@ class ResponseManager:
         return await self.stringify(response)
 
     @classmethod
-    async def add_required_fields(cls, response: Response) -> Response:
+    async def add_required_fields(self, response: Response) -> Response:
         if not any(header.name == "Content-Type" for header in response.headers):
             content_type = (
                 "application/json"
@@ -34,7 +34,7 @@ class ResponseManager:
         return response
 
     @classmethod
-    async def stringify(cls, response: Response) -> str:
+    async def stringify(self, response: Response) -> str:
         status_text = "OK" if 200 <= response.status_code < 400 else "ERROR"
         result = f"HTTP/1.1 {response.status_code} {status_text}\r\n"
 

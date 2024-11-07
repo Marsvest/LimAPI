@@ -44,6 +44,6 @@ class EndpointManager:
                 else:
                     response_data: Any = await bound_function()
 
-                return (method, response_data)
+                return method, response_data
 
         return None
