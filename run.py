@@ -13,12 +13,12 @@ async def main():
     return response
 
 
-@Router.get("/test")
+@Router.post("/test")
 async def test(request: Request):
     print(request.cookie)
     # await asyncio.sleep(5)
     print("Выполнение полезной нагрузки...")
-    return Response(payload="Test Success!", status_code=400)
+    return Response(payload="Test Success!")
 
 
 server.run()

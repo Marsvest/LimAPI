@@ -21,7 +21,7 @@ class Request:
 @dataclass
 class Response:
     payload: Any
-    status_code: int = 200
+    status_code: int = 0
     method: str = "none"
     cookie: Optional[str] = None
     headers: Optional[List[Header]] = field(default_factory=list)

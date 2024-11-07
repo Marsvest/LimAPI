@@ -38,12 +38,12 @@ class EndpointManager:
 
         if data:
             method, bound_function = data
+            if method == request.method:
+                if has_request(bound_function):
+                    response_data: Any = await bound_function(request)
+                else:
+                    response_data: Any = await bound_function()
 
-            if has_request(bound_function):
-                response_data: Any = await bound_function(request)
-            else:
-                response_data: Any = await bound_function()
-        else:
-            return None
+                return (method, response_data)
 
-        return (method, response_data)
+        return None
