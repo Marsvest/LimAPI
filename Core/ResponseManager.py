@@ -10,8 +10,8 @@ class ResponseManager:
         self, method: str, status_code: int, data: Any | Response
     ) -> Response:
         if type(data) is Response:
-            data.method = method
-            data.status_code = status_code
+            data.method = method if not data.method else data.method
+            data.status_code = status_code if not data.status_code else data.status_code
             response: Response = await self.add_require_fields(data)
         else:
             response: Response = await self.add_require_fields(
@@ -38,7 +38,7 @@ class ResponseManager:
 
     @classmethod
     async def stringify(self, response: Response) -> str:
-        ok_or_error: str = "OK" if response.status_code in (200, 201) else "ERROR"
+        ok_or_error: str = "OK" if response.status_code in range(200, 400) else "ERROR"
         result: str = f"HTTP/1.1 {response.status_code} {ok_or_error}\r\n"
 
         for header in response.headers:

@@ -18,7 +18,7 @@ async def test(request: Request):
     print(request.cookie)
     # await asyncio.sleep(5)
     print("Выполнение полезной нагрузки...")
-    return Response(payload="Test Success!")
+    return Response(payload="Test Success!", status_code=400)
 
 
 server.run()
