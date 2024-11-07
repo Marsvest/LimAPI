@@ -9,22 +9,22 @@
 ## Quickstart
 ```
 from LimAPI.Core import Server, Router
-from LimAPI.Types import Request
+from LimAPI.Types import Request, Response
 
 
 server = Server()
 
 
-@Router.create("/")
-async def main():
-    return "Hello, world!"
+@Router.get("/echo")
+async def echo(text: str):
+    return text
 
 
-@Router.create("/test")
+@Router.get("/test")
 async def test(request: Request):
-    print(request.headers)
-    print('Выполнение полезной нагрузки...')
-    return "Test Success!"
+    print(request.cookie)
+    print("Выполнение полезной нагрузки...")
+    return Response(payload="Test Success!", status_code=200)
 
 
 server.run()
