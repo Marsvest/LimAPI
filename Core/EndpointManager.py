@@ -1,26 +1,44 @@
-from typing import Callable, Dict, Any
+from typing import Callable, Dict, Any, Tuple
 
 from Core.Types import Request
 from Core.utils import has_request
 
 
 class EndpointManager:
-    endpoints: Dict[str, Callable] = {}
+    endpoints: Dict[str, Tuple[str, Callable]] = {}
 
     @classmethod
-    def create(self, route: str) -> Callable:
+    def get(self, route: str) -> Callable:
+        return self.create(route, "GET")
+
+    @classmethod
+    def post(self, route: str) -> Callable:
+        return self.create(route, "POST")
+
+    @classmethod
+    def update(self, route: str) -> Callable:
+        return self.create(route, "UPDATE")
+
+    @classmethod
+    def delete(self, route: str) -> Callable:
+        return self.create(route, "DELETE")
+
+    @classmethod
+    def create(self, route: str, method: str) -> Callable:
         def decorator(func: Callable) -> Callable:
-            self.endpoints[route] = func
+            self.endpoints[route] = method, func
             return func
 
         return decorator
 
     @classmethod
-    async def process(self, request: Request) -> Any:
+    async def process(self, request: Request) -> Tuple[str, Any]:
         route: str = request.endpoint
-        bound_function: Callable = self.endpoints.get(route)
+        data = self.endpoints.get(route)
 
-        if bound_function:
+        if data:
+            method, bound_function = data
+
             if has_request(bound_function):
                 response_data: Any = await bound_function(request)
             else:
@@ -28,4 +46,4 @@ class EndpointManager:
         else:
             return None
 
-        return response_data
+        return (method, response_data)

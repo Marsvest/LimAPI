@@ -1,6 +1,5 @@
 import asyncio
 from asyncio import StreamReader, StreamWriter
-from typing import Any
 
 from Core.RequestManager import RequestManager
 from Core.EndpointManager import EndpointManager
@@ -27,13 +26,19 @@ class Server:
         request: Request = await RequestManager.process(raw_request.decode())
 
         # Роутинг запроса
-        endpoint_data: Any = await EndpointManager.process(request)
+        data = await EndpointManager.process(request)
+        if data:
+            method, endpoint_data = data
+            status_code: int = 201 if method == "POST" else 200
+        else:
+            method: str = "GET"
+            endpoint_data = "Endpoint doesn't exists"
+            status_code: int = 404
 
         # Обработка ответа
-        response: str = await ResponseManager.process(endpoint_data)
-
-        # Заглушка
-        response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello, World!"
+        response: str = await ResponseManager.process(
+            method, status_code, endpoint_data
+        )
 
         # Отправка ответа
         writer.write(response.encode())

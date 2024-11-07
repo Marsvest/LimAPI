@@ -1,22 +1,24 @@
 # import asyncio
 from LimAPI.Core import Server, Router
-from LimAPI.Types import Request
+from LimAPI.Types import Request, Response
 
 
 server = Server()
 
 
-@Router.create("/")
+@Router.get("/")
 async def main():
-    return "Hello, world!"
+    # return "Hello, world!"
+    response = Response(payload="1212")
+    return response
 
 
-@Router.create("/test")
+@Router.get("/test")
 async def test(request: Request):
-    print(request.headers)
+    print(request.cookie)
     # await asyncio.sleep(5)
-    print('Выполнение полезной нагрузки...')
-    return "Test Success!"
+    print("Выполнение полезной нагрузки...")
+    return Response(payload="Test Success!")
 
 
 server.run()

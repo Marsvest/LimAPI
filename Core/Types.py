@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Any, List, Optional
 
 
 @dataclass
@@ -11,12 +12,15 @@ class Header:
 class Request:
     method: str
     endpoint: str
-    cookie: str | None
-    payload: str | None
-    headers: list[Header]
+    cookie: Optional[str] = None
+    payload: Optional[str] = None
+    headers: Optional[List[Header]] = field(default_factory=list)
 
 
 @dataclass
 class Response:
-    payload: str | None
-    headers: list[Header]
+    payload: Any
+    status_code: int = 200
+    method: str = "none"
+    cookie: Optional[str] = None
+    headers: Optional[List[Header]] = field(default_factory=list)
