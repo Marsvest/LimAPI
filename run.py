@@ -13,6 +13,11 @@ async def main():
     return response
 
 
+@Router.get("/echo")
+async def echo(text: str):
+    return text
+
+
 @Router.post("/test")
 async def test(request: Request):
     print(request.cookie)

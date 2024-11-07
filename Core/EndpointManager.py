@@ -1,4 +1,4 @@
-from typing import Callable, Dict, Any, Tuple
+from typing import Callable, Dict, Any, Tuple, Optional
 
 from Core.Types import Request
 from Core.utils import has_request
@@ -8,42 +8,43 @@ class EndpointManager:
     endpoints: Dict[str, Tuple[str, Callable]] = {}
 
     @classmethod
-    def get(self, route: str) -> Callable:
-        return self.create(route, "GET")
+    def get(cls, route: str) -> Callable:
+        return cls.create(route, "GET")
 
     @classmethod
-    def post(self, route: str) -> Callable:
-        return self.create(route, "POST")
+    def post(cls, route: str) -> Callable:
+        return cls.create(route, "POST")
 
     @classmethod
-    def update(self, route: str) -> Callable:
-        return self.create(route, "UPDATE")
+    def update(cls, route: str) -> Callable:
+        return cls.create(route, "UPDATE")
 
     @classmethod
-    def delete(self, route: str) -> Callable:
-        return self.create(route, "DELETE")
+    def delete(cls, route: str) -> Callable:
+        return cls.create(route, "DELETE")
 
     @classmethod
-    def create(self, route: str, method: str) -> Callable:
+    def create(cls, route: str, method: str) -> Callable:
         def decorator(func: Callable) -> Callable:
-            self.endpoints[route] = method, func
+            cls.endpoints[route] = (method, func)
             return func
 
         return decorator
 
     @classmethod
-    async def process(self, request: Request) -> Tuple[str, Any]:
+    async def process(cls, request: Request) -> Optional[Tuple[str, Any]]:
         route: str = request.endpoint
-        data = self.endpoints.get(route)
+        data = cls.endpoints.get(route)
 
         if data:
             method, bound_function = data
             if method == request.method:
                 if has_request(bound_function):
-                    response_data: Any = await bound_function(request)
+                    response_data: Any = await bound_function(
+                        request, **request.query_params
+                    )
                 else:
-                    response_data: Any = await bound_function()
-
+                    response_data: Any = await bound_function(**request.query_params)
                 return method, response_data
 
         return None

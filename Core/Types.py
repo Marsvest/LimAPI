@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Dict
 
 
 @dataclass
@@ -12,6 +12,7 @@ class Header:
 class Request:
     method: str
     endpoint: str
+    query_params: Dict[str, List[str]] = field(default_factory=dict)
     cookie: Optional[str] = None
     params: Optional[List[str]] = field(default_factory=list)
     payload: Optional[str] = None
