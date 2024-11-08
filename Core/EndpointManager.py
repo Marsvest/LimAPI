@@ -43,13 +43,16 @@ class EndpointManager:
                     k: v for k, v in request.query_params.items() if k in annotated_args
                 }
 
-                if has_request(bound_function):
-                    response_data: Any = await bound_function(
-                        request, **filtered_params
-                    )
-                else:
-                    response_data: Any = await bound_function(**filtered_params)
-
-                return method, response_data
+                try:
+                    if has_request(bound_function):
+                        response_data: Any = await bound_function(
+                            request, **filtered_params
+                        )
+                    else:
+                        response_data: Any = await bound_function(**filtered_params)
+                    return method, response_data
+                except Exception as e:
+                    print(e)
+                    return request.method, {"error": str(e)}
 
         return None

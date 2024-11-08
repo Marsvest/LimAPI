@@ -33,6 +33,12 @@ class RequestManager:
                     else (endpoint_with_query, "")
                 )
                 query_params = parse_qs(query_str)
+                query_params = {
+                    key: [int(value) if value.isdigit() else value for value in values]
+                    if len(values) > 1
+                    else (int(values[0]) if values[0].isdigit() else values[0])
+                    for key, values in query_params.items()
+                }
                 continue
             elif raw_header == "{":
                 body = raw_headers[raw_headers.index(raw_header) :]

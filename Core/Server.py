@@ -55,4 +55,7 @@ class Server:
 
     def run(self) -> None:
         # TODO: Добавить try except Exception as e: print(e)
-        asyncio.run(self.start_polling())
+        try:
+            asyncio.run(self.start_polling())
+        except Exception as e:
+            print(e)
