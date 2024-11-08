@@ -1,5 +1,4 @@
 from typing import Callable, Dict, Any, Tuple, Optional
-
 from Core.Types import Request
 from Core.utils import has_request
 
@@ -39,12 +38,18 @@ class EndpointManager:
         if data:
             method, bound_function = data
             if method == request.method:
+                annotated_args = bound_function.__annotations__.keys()
+                filtered_params = {
+                    k: v for k, v in request.query_params.items() if k in annotated_args
+                }
+
                 if has_request(bound_function):
                     response_data: Any = await bound_function(
-                        request, **request.query_params
+                        request, **filtered_params
                     )
                 else:
-                    response_data: Any = await bound_function(**request.query_params)
+                    response_data: Any = await bound_function(**filtered_params)
+
                 return method, response_data
 
         return None

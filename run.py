@@ -7,10 +7,10 @@ server = Server()
 
 @Router.get("/echo")
 async def echo(text: str):
-    return text
+    return {"data": text}
 
 
-@Router.get("/test")
+@Router.post("/test")
 async def test(request: Request):
     print(request.cookie)
     print("Выполнение полезной нагрузки...")
