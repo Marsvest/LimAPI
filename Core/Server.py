@@ -54,7 +54,6 @@ class Server:
             await server.serve_forever()
 
     def run(self) -> None:
-        # TODO: Добавить try except Exception as e: print(e)
         try:
             asyncio.run(self.start_polling())
         except Exception as e:

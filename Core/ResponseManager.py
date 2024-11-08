@@ -6,20 +6,20 @@ from Core.Types import Response, Header
 class ResponseManager:
     @classmethod
     async def process(
-        self, method: str, status_code: int, data: Union[Any, Response]
+        cls, method: str, status_code: int, data: Union[Any, Response]
     ) -> str:
         response = (
-            await self.add_required_fields(data)
+            await cls.add_required_fields(data)
             if isinstance(data, Response)
-            else await self.add_required_fields(
+            else await cls.add_required_fields(
                 Response(method=method, payload=data, status_code=status_code)
             )
         )
 
-        return await self.stringify(response)
+        return await cls.stringify(response)
 
     @classmethod
-    async def add_required_fields(self, response: Response) -> Response:
+    async def add_required_fields(cls, response: Response) -> Response:
         if not any(header.name == "Content-Type" for header in response.headers):
             content_type = (
                 "application/json"
@@ -34,7 +34,7 @@ class ResponseManager:
         return response
 
     @classmethod
-    async def stringify(self, response: Response) -> str:
+    async def stringify(cls, response: Response) -> str:
         status_text = "OK" if 200 <= response.status_code < 400 else "ERROR"
         result = f"HTTP/1.1 {response.status_code} {status_text}\r\n"
 
