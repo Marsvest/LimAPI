@@ -6,6 +6,8 @@ from Core.EndpointManager import EndpointManager
 from Core.ResponseManager import ResponseManager
 from Core.Types import Request
 
+from WatchDog.Watcher import Watcher
+
 
 class Server:
     def __init__(self, host: str = "127.0.0.1", port: int = 8080) -> None:
@@ -51,6 +53,7 @@ class Server:
         print(f"Сервер запущен на {self.host}:{self.port}")
 
         async with server:
+            await Watcher.watch()
             await server.serve_forever()
 
     def run(self) -> None:
